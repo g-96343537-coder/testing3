@@ -15,20 +15,17 @@ body {
   overflow-x: hidden;
 }
 
-/* 主标题 */
 h1 {
   font-size: 2.4rem;
   text-align: center;
   margin-bottom: 20px;
 }
 
-/* 页码 */
 #q-index {
   font-size: 1.6rem;
   margin-bottom: 15px;
 }
 
-/* 浮现层：覆盖题目和选项 */
 #quiz-container {
   background: rgba(255,255,255,0.85);
   padding: 24px 28px;
@@ -41,25 +38,21 @@ h1 {
   animation: fadeIn 0.8s forwards, floatUpDown 3s ease-in-out infinite alternate;
 }
 
-/* 渐显动画 */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 轻微漂浮动画 */
 @keyframes floatUpDown {
   0% { transform: translateY(0px); }
   100% { transform: translateY(-6px); }
 }
 
-/* 题目 */
 #question {
   font-size: 2rem;
   margin-bottom: 25px;
 }
 
-/* 选项浮现框 */
 .opt {
   font-size: 2.1rem;
   padding: 16px 22px;
@@ -78,7 +71,6 @@ h1 {
 .opt.correct { background: rgba(90, 220, 100,0.9); border-color: #56d56c; }
 .opt.wrong { background: rgba(255, 200, 200,0.9); border-color: #ff7b7b; }
 
-/* 按钮样式 */
 button {
   font-size: 1.8rem;
   padding: 14px 28px;
@@ -100,7 +92,6 @@ button:disabled {
   margin-left: 12px;
 }
 
-/* 分数和结果 */
 .score {
   font-size: 1.6rem;
   margin-top: 15px;
@@ -114,13 +105,13 @@ button:disabled {
   text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
 #upload-status {
-    font-size: 1rem;
-    color: #666;
+    font-size: 1.2rem;
+    color: #444;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 15px;
+    min-height: 30px;
 }
 
-/* 学生信息页 */
 #student-info {
   display: flex;
   flex-direction: column;
@@ -176,7 +167,7 @@ button:disabled {
 
 <script>
 // ====== Google Apps Script URL ======
-// 请确保此链接已部署为 Web App，且权限设置为 "Anyone" (任何人)
+// 确保这个链接是最新的，并且权限是 "Anyone"
 const scriptURL = "https://script.google.com/macros/s/AKfycby2h2i4vVaR59Q4vJJCxqm5asE61UV6yWzMuGyHX3h7m5towFqmJs5YZdvnohSMzKE/exec";
 
 // ====== 题库 ======
@@ -277,52 +268,46 @@ document.getElementById('nextBtn').addEventListener('click',()=>{
   loadQuestion();
 });
 
-// ====== 关键修改：完成测验并发送数据 ======
+// ====== 重点修复：使用表单模式发送，防止跨域错误 ======
 document.getElementById('finishBtn').addEventListener('click', () => {
   const finishBtn = document.getElementById('finishBtn');
   const resultDiv = document.getElementById('result');
   const statusDiv = document.getElementById('upload-status');
   
-  // 1. 界面反馈：禁用按钮，提示正在上传
+  // 1. 界面反馈
   finishBtn.disabled = true;
   finishBtn.textContent = '正在保存成绩...';
   
-  // 2. 准备数据
-  const payload = {
-    name: studentName,
-    class: studentClass,
-    score: score,
-    total: data.length
-  };
+  // 2. 准备数据 (使用 URLSearchParams 模拟表单)
+  const formData = new URLSearchParams();
+  formData.append('name', studentName);
+  formData.append('class', studentClass);
+  formData.append('score', score);
+  formData.append('total', data.length);
   
-  // 3. 发送到 Google Apps Script
-  // 注意：这里必须使用 JSON.stringify，因为你的后端是用 JSON.parse(e.postData.contents) 接收的
+  // 3. 发送
   fetch(scriptURL, {
     method: 'POST',
-    body: JSON.stringify(payload),
-    // 重要：不要设置 header 为 application/json，否则会触发 CORS 预检失败
-    // 默认作为 text/plain 发送，你的后端代码也能完美处理
+    body: formData
   })
   .then(response => {
-    if (response.ok) {
-      return response.text();
-    }
-    throw new Error('网络响应错误');
+    // 只要没有网络层面的错误，Google Script 就会返回内容
+    return response.text();
   })
-  .then(data => {
-    // 成功
-    console.log('成功:', data);
+  .then(result => {
+    // 成功处理
+    console.log('Server response:', result);
     resultDiv.textContent = `🎉 太棒啦，${studentName}! 总得分：${score} / ${data.length}`;
     statusDiv.textContent = "✅ 成绩已成功上传给老师！";
-    finishBtn.style.display = 'none'; // 隐藏按钮
+    finishBtn.style.display = 'none'; 
   })
   .catch((error) => {
-    // 失败
-    console.error('错误:', error);
+    // 错误处理
+    console.error('Fetch error:', error);
     resultDiv.textContent = `🎉 完成！${studentName}, 总得分：${score} / ${data.length}`;
-    statusDiv.innerHTML = `<span style="color:red">⚠️ 成绩上传失败，请把这个画面截图发给老师。<br>原因: ${error.message}</span>`;
-    finishBtn.textContent = '完成测验'; // 恢复按钮文字
-    finishBtn.disabled = false; // 允许重试
+    statusDiv.innerHTML = `<span style="color:red">⚠️ 成绩上传失败。<br>原因: ${error.message}</span>`;
+    finishBtn.textContent = '重试上传';
+    finishBtn.disabled = false;
   });
 });
 
@@ -334,7 +319,7 @@ document.getElementById('restart').addEventListener('click',()=>{
     document.getElementById('score').textContent='得分：0';
     document.getElementById('nextBtn').style.display='inline-block';
     document.getElementById('nextBtn').disabled=true;
-    document.getElementById('upload-status').textContent = ''; // 清空状态
+    document.getElementById('upload-status').textContent = ''; 
     loadQuestion();
   }
 });
@@ -352,7 +337,6 @@ document.getElementById('startQuiz').addEventListener('click',()=>{
   studentName = nameInput;
   studentClass = classSelect;
 
-  // 隐藏信息页，显示测验页
   document.getElementById('student-info').style.display='none';
   document.getElementById('quiz-content').style.display='block';
   loadQuestion();
