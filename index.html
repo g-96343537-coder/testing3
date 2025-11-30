@@ -167,7 +167,7 @@ button:disabled {
 
 <script>
 // ====== Google Apps Script URL ======
-// 确保这个链接是最新的，并且权限是 "Anyone"
+// 请确保此链接已部署为 Web App，且权限设置为 "Anyone" (任何人)
 const scriptURL = "https://script.google.com/macros/s/AKfycby2h2i4vVaR59Q4vJJCxqm5asE61UV6yWzMuGyHX3h7m5towFqmJs5YZdvnohSMzKE/exec";
 
 // ====== 题库 ======
@@ -268,7 +268,7 @@ document.getElementById('nextBtn').addEventListener('click',()=>{
   loadQuestion();
 });
 
-// ====== 重点修复：使用表单模式发送，防止跨域错误 ======
+// ====== 关键修改：no-cors 模式 ======
 document.getElementById('finishBtn').addEventListener('click', () => {
   const finishBtn = document.getElementById('finishBtn');
   const resultDiv = document.getElementById('result');
@@ -278,31 +278,35 @@ document.getElementById('finishBtn').addEventListener('click', () => {
   finishBtn.disabled = true;
   finishBtn.textContent = '正在保存成绩...';
   
-  // 2. 准备数据 (使用 URLSearchParams 模拟表单)
+  // 2. 准备数据 (使用 URLSearchParams)
   const formData = new URLSearchParams();
   formData.append('name', studentName);
   formData.append('class', studentClass);
   formData.append('score', score);
   formData.append('total', data.length);
   
-  // 3. 发送
+  // 3. 发送 (开启 no-cors 模式)
   fetch(scriptURL, {
     method: 'POST',
+    // ⚠️ 重点：no-cors 模式。告诉浏览器忽略跨域检查。
+    // 副作用：我们无法读取服务器的返回内容（opaque response）。
+    // 但只要请求发出去了，Google Script 就会执行。
+    mode: 'no-cors', 
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
     body: formData
   })
-  .then(response => {
-    // 只要没有网络层面的错误，Google Script 就会返回内容
-    return response.text();
-  })
-  .then(result => {
-    // 成功处理
-    console.log('Server response:', result);
+  .then(() => {
+    // 因为是 no-cors，我们假设没有网络报错就是成功了
+    // 虽然看不到服务器返回的 "success" 字样，但数据应该已经到了
+    console.log('Request sent (no-cors mode)');
     resultDiv.textContent = `🎉 太棒啦，${studentName}! 总得分：${score} / ${data.length}`;
-    statusDiv.textContent = "✅ 成绩已成功上传给老师！";
+    statusDiv.textContent = "✅ 成绩已发送给老师！";
     finishBtn.style.display = 'none'; 
   })
   .catch((error) => {
-    // 错误处理
+    // 只有断网或地址严重错误才会进这里
     console.error('Fetch error:', error);
     resultDiv.textContent = `🎉 完成！${studentName}, 总得分：${score} / ${data.length}`;
     statusDiv.innerHTML = `<span style="color:red">⚠️ 成绩上传失败。<br>原因: ${error.message}</span>`;
