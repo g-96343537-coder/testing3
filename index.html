@@ -67,13 +67,13 @@ tr:nth-child(even) { background: #f2f2f2; }
 </table>
 
 <script>
-// GAS JSON 数据链接
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxj4i4F9FNc-Q3JW7p2mNDupg6Kd8WAwiv1qQKqzGYq6XeDd-qb50SgGB9ov8XwIApjfA/exec";
+// 替换为你的新 Web App URL
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxYNeL4SjR7Phcn-3YdiWf3b-n_C2iZiBhxoi-MGw8a/exec";
 
-// 获取成绩
+// 获取成绩数据
 async function fetchScores() {
   try {
-    const res = await fetch(GAS_URL); // doGet 必须返回 JSON
+    const res = await fetch(GAS_URL);
     const data = await res.json();
     renderTable(data);
     renderClassStats(data);
@@ -87,6 +87,8 @@ async function fetchScores() {
 function renderTable(data) {
   const tbody = document.querySelector("#scoreTable tbody");
   tbody.innerHTML = "";
+  // 按得分降序排序
+  data.sort((a,b) => b.score - a.score);
   data.forEach(row => {
     const tr = document.createElement("tr");
     tr.innerHTML = `<td>${row.name}</td>
@@ -138,5 +140,6 @@ document.getElementById("filter").addEventListener("input", (e)=>{
 
 fetchScores();
 </script>
+
 </body>
 </html>
