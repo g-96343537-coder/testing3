@@ -5,72 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>二年级数学测验成绩统计</title>
 <style>
-body {
-  font-family: "Microsoft YaHei", sans-serif;
-  background: #f0f4f8;
-  padding: 20px;
-}
-h1, h2 { text-align: center; margin-bottom: 15px; }
-#stats { margin-bottom: 25px; text-align: center; }
-#filter {
-  margin-bottom: 15px;
-  padding: 8px 12px;
-  font-size: 1rem;
-  width: 30%;
-  border-radius: 6px;
-  border: 1px solid #aaa;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-th, td {
-  padding: 12px;
-  border: 1px solid #ccc;
-  text-align: center;
-}
-th {
-  background: #7dbbff;
-  color: #fff;
-  cursor: pointer;
-}
-tr:nth-child(even) { background: #f2f2f2; }
+/* 样式同前面教师端 HTML */
 </style>
 </head>
 <body>
-
 <h1>二年级数学测验成绩统计</h1>
-
 <div id="stats">
   <h2>班级统计</h2>
   <div id="classStats"></div>
 </div>
-
 <input id="filter" placeholder="按班级或学生姓名搜索...">
-
 <table id="scoreTable">
   <thead>
-    <tr>
-      <th>姓名</th>
-      <th>班级</th>
-      <th>得分</th>
-      <th>总题数</th>
-      <th>提交时间</th>
-    </tr>
+    <tr><th>姓名</th><th>班级</th><th>得分</th><th>总题数</th><th>提交时间</th></tr>
   </thead>
   <tbody></tbody>
 </table>
 
 <script>
-// 替换为你的新 Web App URL
 const GAS_URL = "https://script.google.com/macros/s/AKfycbxYNeL4SjR7Phcn-3YdiWf3b-n_C2iZiBhxoi-MGw8a/exec";
 
-// 获取成绩数据
 async function fetchScores() {
   try {
     const res = await fetch(GAS_URL);
@@ -83,63 +37,45 @@ async function fetchScores() {
   }
 }
 
-// 渲染表格
 function renderTable(data) {
   const tbody = document.querySelector("#scoreTable tbody");
   tbody.innerHTML = "";
-  // 按得分降序排序
-  data.sort((a,b) => b.score - a.score);
-  data.forEach(row => {
+  data.sort((a,b)=>b.score-a.score);
+  data.forEach(row=>{
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${row.name}</td>
-                    <td>${row.class}</td>
-                    <td>${row.score}</td>
-                    <td>${row.total}</td>
-                    <td>${row.timestamp}</td>`;
+    tr.innerHTML = `<td>${row.name}</td><td>${row.class}</td><td>${row.score}</td><td>${row.total}</td><td>${row.timestamp}</td>`;
     tbody.appendChild(tr);
   });
 }
 
-// 统计班级数据
-function renderClassStats(data) {
+function renderClassStats(data){
   const statsDiv = document.getElementById("classStats");
   const classMap = {};
-  data.forEach(r => {
-    if(!classMap[r.class]) classMap[r.class] = [];
+  data.forEach(r=>{
+    if(!classMap[r.class]) classMap[r.class]=[];
     classMap[r.class].push(r.score);
   });
-
   let html = "<table style='margin:auto; width:60%; text-align:center;'>";
   html += "<tr><th>班级</th><th>学生数</th><th>平均分</th><th>最高分</th><th>最低分</th></tr>";
-
   for(const cls in classMap){
     const scores = classMap[cls];
     const avg = (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1);
     const max = Math.max(...scores);
     const min = Math.min(...scores);
-    html += `<tr>
-      <td>${cls}</td>
-      <td>${scores.length}</td>
-      <td>${avg}</td>
-      <td>${max}</td>
-      <td>${min}</td>
-    </tr>`;
+    html += `<tr><td>${cls}</td><td>${scores.length}</td><td>${avg}</td><td>${max}</td><td>${min}</td></tr>`;
   }
   html += "</table>";
   statsDiv.innerHTML = html;
 }
 
-// 搜索功能
-document.getElementById("filter").addEventListener("input", (e)=>{
+document.getElementById("filter").addEventListener("input", e=>{
   const filter = e.target.value.toLowerCase();
   document.querySelectorAll("#scoreTable tbody tr").forEach(tr=>{
-    const text = tr.textContent.toLowerCase();
-    tr.style.display = text.includes(filter) ? "" : "none";
+    tr.style.display = tr.textContent.toLowerCase().includes(filter) ? "" : "none";
   });
 });
 
 fetchScores();
 </script>
-
 </body>
 </html>
