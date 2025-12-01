@@ -3,39 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>三年级数学选择题测验</title>
+<title>四年级数学选择题测验</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']] },
+    startup: {
+      pageReady: () => {
+        return MathJax.startup.defaultPageReady();
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <style>
 body {
-  font-family: "ZCOOL KuaiLe', 'Microsoft YaHei', sans-serif";
+  font-family: "ZCOOL KuaiLe", "Microsoft YaHei", sans-serif;
   font-size: 18px; 
-  background: url('https://www.freevector.com/uploads/vector/preview/31147/Freevector_Colorful-Abstract-Background_mf0221.jpg') no-repeat center center fixed;
+  background: url('https://wallpapercave.com/wp/wp14191696.jpg') no-repeat center center fixed;
   background-size: cover;
   padding: 20px;
   color: #000;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
+/* 主标题 */
 h1 {
-  font-size: 2.4rem;
+  font-size: 2.2rem;
   text-align: center;
   margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
 }
 
+/* 页码 */
 #q-index {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   margin-bottom: 15px;
+  color: #444;
 }
 
+/* 浮现层 */
 #quiz-container {
-  background: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.9);
   padding: 24px 28px;
   border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.35), 0 0 20px rgba(255,255,255,0.2) inset;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
   backdrop-filter: blur(6px);
-  max-width: 900px;
+  max-width: 800px;
   margin: auto;
-  opacity: 80;
-  animation: fadeIn 0.8s forwards, floatUpDown 3s ease-in-out infinite alternate;
+  animation: fadeIn 0.8s forwards;
 }
 
 @keyframes fadeIn {
@@ -43,108 +59,128 @@ h1 {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes floatUpDown {
-  0% { transform: translateY(0px); }
-  100% { transform: translateY(-6px); }
-}
-
+/* 题目 */
 #question {
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin-bottom: 25px;
+  line-height: 1.6;
+  font-weight: bold;
 }
 
+/* 选项 */
 .opt {
-  font-size: 2.1rem;
-  padding: 16px 22px;
-  margin-bottom: 18px;
-  border-radius: 16px;
-  border: 3px solid #d0d0d0;
-  background: rgba(255,255,255,0.95);
+  font-size: 1.6rem;
+  padding: 14px 20px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 2px solid #d0d0d0;
+  background: #fff;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.2s;
 }
 .opt:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+  border-color: #7dbbff;
+  background: #f0f8ff;
 }
-.opt.correct { background: rgba(90, 220, 100,0.9); border-color: #56d56c; }
-.opt.wrong { background: rgba(255, 200, 200,0.9); border-color: #ff7b7b; }
+.opt:active {
+  transform: scale(0.98);
+}
+.opt.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+.opt.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+.opt.disabled { pointer-events: none; }
 
+/* 按钮 */
 button {
-  font-size: 1.8rem;
-  padding: 14px 28px;
-  background: #7dbbff;
+  font-family: inherit;
+}
+#nextBtn, #finishBtn, #startQuiz {
+  font-size: 1.5rem;
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #7dbbff, #5ca8ff);
+  color: white;
   border: none;
-  border-radius: 14px;
+  border-radius: 50px;
   cursor: pointer;
   margin-top: 20px;
-  transition: background 0.3s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: transform 0.1s;
+  width: 100%;
+  max-width: 300px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
-button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
-#finishBtn { display:none; }
+#nextBtn:active, #finishBtn:active { transform: scale(0.95); }
+#nextBtn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+#finishBtn { display:none; background: linear-gradient(135deg, #42e695, #3bb2b8); }
+
 #restart {
-  font-size: 1.3rem;
-  padding: 8px 18px;
-  margin-left: 12px;
+  font-size: 1.1rem;
+  padding: 8px 15px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+/* 输入框 */
+#student-info { text-align: center; }
+#student-info label { display: block; margin: 20px 0; font-size: 1.5rem; }
+#student-info input, #student-info select {
+  font-size: 1.2rem;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 80%;
+  max-width: 300px;
+}
+
+/* 结果 */
 .score {
-  font-size: 1.6rem;
-  margin-top: 15px;
+  font-size: 1.4rem;
+  margin-top: 20px;
+  text-align: center;
+  color: #555;
 }
 #result {
   margin-top: 25px;
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: bold;
   text-align: center;
   color: #1a1a1a;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
 #upload-status {
-    font-size: 1.2rem;
-    color: #444;
-    text-align: center;
-    margin-top: 15px;
-    min-height: 30px;
-}
-
-#student-info {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-#student-info input, #student-info select {
-  font-size: 1.8rem;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 2px solid #d0d0d0;
-}
-#student-info button {
-  width: 180px;
-  align-self: center;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 1.2rem;
 }
 </style>
 </head>
 <body>
-<h1>三年级数学选择题测验</h1>
+<h1>四年级数学选择题测验</h1>
 
 <div id="quiz-container">
   <div id="student-info">
-    <label>姓名：
+    <label>姓名：<br>
       <input type="text" id="studentName" placeholder="请输入你的名字">
     </label>
-    <label>班级：
+    <label>班级：<br>
       <select id="studentClass">
         <option value="">请选择班级</option>
-        <option value="3M">3M</option>
-        <option value="3K">3K</option>
-        <option value="3B">3B</option>
-        <option value="3H">3H</option>
-        <option value="3J">3J</option>
+        <option value="4M">4M</option>
+        <option value="4K">4K</option>
+        <option value="4B">4B</option>
+        <option value="4H">4H</option>
+        <option value="4J">4J</option>
+        <option value="4U">4U</option>
+        <option value="4P">4P</option>
+        <option value="4C">4C</option>
       </select>
     </label>
     <button id="startQuiz">开始测验</button>
@@ -167,173 +203,184 @@ button:disabled {
 
 <script>
 // ====== Google Apps Script URL ======
-// 请确保此链接已部署为 Web App，且权限设置为 "Anyone" (任何人)
-const scriptURL = "https://script.google.com/macros/s/AKfycbzuA7A_loQmM8AfheooizJWB3E18ot4Yvcqc_yNUfk-YtFH4l7xGHa8RfgpjuCB9v1L-Q/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbw6thOKFQE_M1HlLqbTEU23OiD4hpz1zJL1QXV8LX5mS772bDNC23gEBzK_tsRg7NR2/exec";
 
 // ====== 题库 ======
 const rawData = `
-1,这里的数目是 “四千零五”。请问数字写法是： A. 405 B. 4005 C. 4050 D. 4500,B
-2,在数目 3 582 中，数字 5 的数位 (Place Value) 是什么？ A. 个位 B. 十位 C. 百位 D. 千位,C
-3,哪个数目的百位近似值是 2 000？ A. 1 920 B. 1 955 C. 2 055 D. 2 100,B
-4,2 145 + 3 620 = A. 5 765 B. 5 785 C. 5 865 D. 6 765,A
-5,8 000 - 3 456 = A. 4 544 B. 4 644 C. 5 456 D. 5 544,A
-6,245 x 4 = A. 860 B. 880 C. 960 D. 980,D
-7,72 / 8 = A. 7 B. 8 C. 9 D. 10,C
-8,560 / 10 = A. 56 B. 50 C. 6 D. 5,A
-9,哪项分数的数值最小？ A. 1/2 B. 1/4 C. 1/8 D. 1/10,D
-10,3/7 + 2/7 = A. 5/14 B. 5/7 C. 6/7 D. 1/7,B
-11,7/9 - 4/9 = A. 2/9 B. 3/9 (或 1/3) C. 3/0 D. 11/9,B
-12,0.5 + 0.3 = A. 0.2 B. 0.8 C. 0.53 D. 8.0,B
-13,把 35% 写成小数。 A. 0.35 B. 3.5 C. 35.0 D. 0.035,A
-14,图中涂黑部分占全图的 45/100。请问百分比是多少？ A. 4% B. 5% C. 45% D. 55%,C
-15,RM 50.00 - RM 13.50 = A. RM 36.50 B. RM 37.50 C. RM 43.50 D. RM 47.50,A
-16,RM 125 x 3 = A. RM 325 B. RM 350 C. RM 375 D. RM 475,C
-17,3 张 RM 50 和 2 张 RM 20 共有多少钱？ A. RM 70 B. RM 170 C. RM 190 D. RM 210,C
-18,现在是 3:00 p.m.。30 分钟后的时刻是： A. 3:30 p.m. B. 4:00 p.m. C. 4:30 p.m. D. 2:30 p.m.,A
-19,1 小时等于多少分钟？ A. 10 B. 24 C. 60 D. 100,C
-20,3 分钟等于多少秒？ A. 120 秒 B. 160 秒 C. 180 秒 D. 300 秒,C
-21,一年有多少个月？ A. 10 B. 12 C. 24 D. 365,B
-22,2 m 45 cm 等于多少 cm？ A. 245 cm B. 2045 cm C. 2450 cm D. 20045 cm,A
-23,1 kg 等于多少 g？ A. 10 g B. 100 g C. 500 g D. 1 000 g,D
-24,3 kg 500 g + 2 kg 200 g = A. 5 kg 300 g B. 5 kg 700 g C. 6 kg 700 g D. 1 kg 300 g,B
-25,1 升 (L) 等于多少毫升 (ml)？ A. 10 ml B. 100 ml C. 1 000 ml D. 10 000 ml,C
-26,500 ml + 850 ml = A. 1 L 350 ml B. 1 L 500 ml C. 135 ml D. 1350 L,A
-27,正方体 (Cube) 有几个平面？ A. 4 B. 6 C. 8 D. 12,B
-28,下列哪种立体图形有曲面？ A. 正方体 B. 长方体 C. 圆柱体 D. 正棱锥体,C
-29,在象形统计图中，一个笑脸符号代表 5 个人。如果有 4 个笑脸符号，代表多少人？ A. 4 B. 9 C. 20 D. 45,C
-30,如果饼分图被分成 4 个相等的部分，每部分代表多少百分比？ A. 10% B. 25% C. 50% D. 100%,B
+1,48 235 中，数字 8 的数位是： A. 个位 B. 十位 C. 百位 D. 千位,D
+2,把 63 942 写成万位近似值。 A. 60 000 B. 63 000 C. 64 000 D. 70 000,A
+3,下列哪一组数目都是奇数？ A. 11, 23, 45 B. 12, 14, 16 C. 10, 21, 33 D. 11, 22, 33,A
+4,\\(13 450 + 2 100 - 500\\) = A. 14 050 B. 15 050 C. 15 550 D. 16 050,B
+5,\\(425 \\times 12\\) = A. 4 100 B. 5 000 C. 5 100 D. 5 200,C
+6,\\(5 600 \\div 100\\) = A. 5.6 B. 56 C. 560 D. 5600,B
+7,把 \\(2\\frac{3}{5}\\) 化为假分数。 A. \\(\\frac{6}{5}\\) B. \\(\\frac{11}{5}\\) C. \\(\\frac{13}{5}\\) D. \\(\\frac{23}{5}\\),C
+8,\\(\\frac{2}{3} + \\frac{1}{9}\\) = A. \\(\\frac{3}{12}\\) B. \\(\\frac{3}{9}\\) C. \\(\\frac{7}{9}\\) D. \\(\\frac{8}{9}\\),C
+9,在 \\(14.257\\) 中，数字 5 的数值是： A. 5 B. 0.5 C. 0.05 D. 0.005,C
+10,\\(8.4 - 2.15\\) = A. 6.25 B. 6.35 C. 10.55 D. 10.65,A
+11,\\(\\frac{3}{4}\\) 等于多少百分比？ A. 25% B. 50% C. 75% D. 100%,C
+12,RM 24 500 + RM 3 250 = A. RM 27 500 B. RM 27 750 C. RM 28 000 D. RM 57 000,B
+13,RM \\(532.80 \\div 4\\) = A. RM 133.00 B. RM 133.20 C. RM 134.20 D. RM 143.20,B
+14,把 3:45 p.m. 写成 24 时计时法。 A. 0345 时 B. 1345 时 C. 1545 时 D. 1645 时,C
+15,4 个年代 6 年 + 2 个年代 9 年 = A. 6 个年代 5 年 B. 7 个年代 5 年 C. 7 个年代 15 年 D. 75 年,B
+16,2 天 10 小时等于多少小时？ A. 34 小时 B. 48 小时 C. 58 小时 D. 60 小时,C
+17,3 km 50 m 等于多少 m？ A. 350 m B. 3050 m C. 3500 m D. 30050 m,B
+18,\\(8\\ \\text{kg }400\\ \\text{g} \\times 2\\) = A. 16 kg 400 g B. 16 kg 800 g C. 17 kg 200 g D. 18 kg 000 g,B
+19,\\(5\\ \\text{L }250\\ \\text{mL} - 1\\ \\text{L }800\\ \\text{mL}\\) = A. 3 升 450 毫升 B. 3 升 850 毫升 C. 4 升 450 毫升 D. 4 升 850 毫升,A
+20,下列哪个角是锐角 (Acute Angle)？ A. 90 度 B. 100 度 C. 45 度 D. 180 度,C
+21,两条直线永远不会相交，这两条直线被称为： A. 平行线 B. 垂直线 C. 交叉线 D. 曲线,A
+22,一个正方形的边长是 8 cm，计算它的周长。 A. 16 cm B. 24 cm C. 32 cm D. 64 cm,C
+23,一个长方形的长是 10 cm，宽是 6 cm。计算它的面积。 A. \\(32\\ \\text{cm}^2\\) B. \\(60\\ \\text{cm}^2\\) C. \\(100\\ \\text{cm}^2\\) D. \\(120\\ \\text{cm}^2\\),B
+24,一个正方体 (Cube) 的体积是 \\(64\\ \\text{cm}^3\\)。请问它的边长是多少？ A. 2 cm B. 3 cm C. 4 cm D. 8 cm,C
+25,坐标平面上，x 轴是： A. 垂直的轴 (Vertical) B. 水平的轴 (Horizontal) C. 斜线 D. 原点坐标 (5, 2),B
+26,原点坐标 (5, 2) 表示： A. 向右 5 个单位，向上 2 个单位 B. 向右 2 个单位，向上 5 个单位 C. 向上 5 个单位，向右 2 个单位 D. 向上 2 个单位，向左 5 个单位,A
+27,老师买了 10 支红笔和 2 支蓝笔。红笔数量和蓝笔数量的比是多少？ A. 2:10 B. 1:5 C. 5:1 D. 10:1,C
+28,象形统计图中，一个苹果符号代表 10 个苹果。如果有半个苹果符号，代表多少个苹果？ A. 1 B. 2 C. 5 D. 10,C
+29,一盒饼干有 50 块。小明吃了 \\(20\\%\\) 的饼干。小明吃了多少块？ A. 10 B. 20 C. 30 D. 40,A
+30,小华有 RM 50。他买了一本书 RM 15.90 和一支笔 RM 4.50。他还剩下多少钱？ A. RM 20.40 B. RM 29.60 C. RM 30.60 D. RM 39.60,B
 `;
 
-// ====== 解析 CSV ======
+// ====== 解析 CSV 逻辑 (稳健版) ======
 const data = rawData.trim().split("\n").map(line=>{
+  if(!line) return null;
   const parts = line.split(",");
-  const answer = parts.pop().trim().toUpperCase();
-  const qid = parts.shift();
-  const full = parts.join(",").trim();
-  const optStart = full.indexOf("A.");
-  const qtext = full.slice(0, optStart).trim();
-  const optRaw = full.slice(optStart);
+  const answerChar = parts.pop().trim().toUpperCase(); 
+  const qid = parts.shift(); 
+  const fullContent = parts.join(","); 
+  
+  const optStart = fullContent.indexOf("A.");
+  const qtext = fullContent.slice(0, optStart).trim();
+  const optRaw = fullContent.slice(optStart);
+  
   const optParts = optRaw.split(/\s(?=[A-D]\.\s)/).map(s=>s.trim());
   const opts = optParts.map(op => op.replace(/^[A-D]\.\s*/, ""));
+  
   while (opts.length < 4) opts.push("(缺失)");
-  return { q: qtext, options: opts, answer: {A:0,B:1,C:2,D:3}[answer] };
-});
+  
+  return { q: qtext, options: opts, answer: {A:0,B:1,C:2,D:3}[answerChar] };
+}).filter(item => item !== null);
 
 // ====== 测验逻辑 ======
-let current=0, score=0, answered=false;
+let current = 0;
+let score = 0;
+let answered = false;
+
 document.getElementById('total').textContent = data.length;
 
 function loadQuestion(){
-  answered=false;
+  answered = false;
   document.getElementById('nextBtn').disabled = true;
   document.getElementById('finishBtn').style.display = 'none';
   document.getElementById('result').textContent = '';
   document.getElementById('upload-status').textContent = '';
+  
   const q = data[current];
-  document.getElementById('question').textContent = q.q;
-  document.getElementById('cur').textContent = current+1;
+  document.getElementById('cur').textContent = current + 1;
+  
+  const qDiv = document.getElementById('question');
+  qDiv.innerHTML = q.q;
 
   const optsDiv = document.getElementById('options');
   optsDiv.innerHTML = '';
+  
   q.options.forEach((opt,i)=>{
     const div = document.createElement('div');
-    div.className='opt';
-    div.textContent = opt;
-    div.addEventListener('click',()=>selectOption(div,i));
+    div.className = 'opt';
+    div.innerHTML = opt;
+    div.addEventListener('click', () => selectOption(div, i));
     optsDiv.appendChild(div);
   });
-}
 
-function selectOption(el,index){
-  if(answered) return;
-  answered=true;
-  const q = data[current];
-  const all = document.querySelectorAll('.opt');
-  all.forEach((d,i)=>{ if(i===q.answer) d.classList.add('correct'); });
-  if(index!==q.answer) el.classList.add('wrong');
-  else score++;
-  document.getElementById('score').textContent='得分：'+score;
-
-  if(current === data.length-1){
-    document.getElementById('finishBtn').style.display='inline-block';
-    document.getElementById('nextBtn').style.display='none';
-  } else {
-    document.getElementById('nextBtn').disabled=false;
+  if (window.MathJax) {
+    MathJax.typesetPromise([qDiv, optsDiv]).catch((err) => console.log('MathJax error:', err));
   }
 }
 
-// 下一题
-document.getElementById('nextBtn').addEventListener('click',()=>{
+function selectOption(el, index){
+  if(answered) return;
+  answered = true;
+  const q = data[current];
+  
+  const all = document.querySelectorAll('.opt');
+  all.forEach(d => d.classList.add('disabled'));
+
+  all.forEach((d, i) => { 
+    if(i === q.answer) d.classList.add('correct'); 
+  });
+
+  if(index !== q.answer) {
+    el.classList.add('wrong');
+  } else {
+    score++;
+  }
+  document.getElementById('score').textContent = '得分：' + score;
+
+  if(current === data.length - 1){
+    document.getElementById('finishBtn').style.display = 'inline-block';
+    document.getElementById('nextBtn').style.display = 'none';
+  } else {
+    document.getElementById('nextBtn').disabled = false;
+  }
+}
+
+// 事件绑定
+document.getElementById('nextBtn').addEventListener('click', () => {
   current++;
   loadQuestion();
 });
 
-// ====== 关键修改：no-cors 模式 ======
 document.getElementById('finishBtn').addEventListener('click', () => {
   const finishBtn = document.getElementById('finishBtn');
   const resultDiv = document.getElementById('result');
   const statusDiv = document.getElementById('upload-status');
   
-  // 1. 界面反馈
   finishBtn.disabled = true;
-  finishBtn.textContent = '正在保存成绩...';
+  finishBtn.textContent = '正在保存...';
   
-  // 2. 准备数据 (使用 URLSearchParams)
   const formData = new URLSearchParams();
   formData.append('name', studentName);
   formData.append('class', studentClass);
   formData.append('score', score);
   formData.append('total', data.length);
   
-  // 3. 发送 (开启 no-cors 模式)
   fetch(scriptURL, {
     method: 'POST',
-    // ⚠️ 重点：no-cors 模式。告诉浏览器忽略跨域检查。
-    // 副作用：我们无法读取服务器的返回内容（opaque response）。
-    // 但只要请求发出去了，Google Script 就会执行。
     mode: 'no-cors', 
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: formData
   })
   .then(() => {
-    // 因为是 no-cors，我们假设没有网络报错就是成功了
-    // 虽然看不到服务器返回的 "success" 字样，但数据应该已经到了
-    console.log('Request sent (no-cors mode)');
-    resultDiv.textContent = `🎉 太棒啦，${studentName}! 总得分：${score} / ${data.length}`;
+    resultDiv.innerHTML = `🎉 测验结束！<br>${studentName}<br>总得分：<span style="color:#007bff">${score} / ${data.length}</span>`;
     statusDiv.textContent = "✅ 成绩已发送给老师！";
     finishBtn.style.display = 'none'; 
   })
   .catch((error) => {
-    // 只有断网或地址严重错误才会进这里
-    console.error('Fetch error:', error);
-    resultDiv.textContent = `🎉 完成！${studentName}, 总得分：${score} / ${data.length}`;
-    statusDiv.innerHTML = `<span style="color:red">⚠️ 成绩上传失败。<br>原因: ${error.message}</span>`;
+    console.error('Upload Error:', error);
+    resultDiv.textContent = `测验结束。得分：${score}`;
+    statusDiv.innerHTML = `<span style="color:red">⚠️ 成绩上传失败，请截图发给老师。</span>`;
     finishBtn.textContent = '重试上传';
     finishBtn.disabled = false;
   });
 });
 
-// 重做
-document.getElementById('restart').addEventListener('click',()=>{
+document.getElementById('restart').addEventListener('click', () => {
   if(confirm('确定重做测验吗？成绩将重新计算。')){
-    current=0;
-    score=0;
-    document.getElementById('score').textContent='得分：0';
-    document.getElementById('nextBtn').style.display='inline-block';
-    document.getElementById('nextBtn').disabled=true;
-    document.getElementById('upload-status').textContent = ''; 
+    current = 0;
+    score = 0;
+    document.getElementById('score').textContent = '得分：0';
+    document.getElementById('nextBtn').style.display = 'inline-block'; 
+    document.getElementById('finishBtn').style.display = 'none';
     loadQuestion();
   }
 });
 
-// ====== 学生信息页逻辑 ======
+// 学生信息页逻辑
 let studentName = '';
 let studentClass = '';
-document.getElementById('startQuiz').addEventListener('click',()=>{
+
+document.getElementById('startQuiz').addEventListener('click', () => {
   const nameInput = document.getElementById('studentName').value.trim();
   const classSelect = document.getElementById('studentClass').value;
+  
   if(!nameInput || !classSelect){
     alert('请填写姓名并选择班级！');
     return;
@@ -341,8 +388,8 @@ document.getElementById('startQuiz').addEventListener('click',()=>{
   studentName = nameInput;
   studentClass = classSelect;
 
-  document.getElementById('student-info').style.display='none';
-  document.getElementById('quiz-content').style.display='block';
+  document.getElementById('student-info').style.display = 'none';
+  document.getElementById('quiz-content').style.display = 'block';
   loadQuestion();
 });
 </script>
