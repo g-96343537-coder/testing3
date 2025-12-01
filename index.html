@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>二年级数学选择题测验</title>
+<title>三年级数学选择题测验</title>
 <style>
 body {
   font-family: "ZCOOL KuaiLe', 'Microsoft YaHei', sans-serif";
   font-size: 18px; 
-  background: url('https://static.vecteezy.com/system/resources/previews/033/247/266/non_2x/abstract-background-pink-blue-pastel-color-free-vector.jpg') no-repeat center center fixed;
+  background: url('https://www.freevector.com/uploads/vector/preview/31147/Freevector_Colorful-Abstract-Background_mf0221.jpg') no-repeat center center fixed;
   background-size: cover;
   padding: 20px;
   color: #000;
@@ -130,7 +130,7 @@ button:disabled {
 </style>
 </head>
 <body>
-<h1>二年级数学选择题测验</h1>
+<h1>三年级数学选择题测验</h1>
 
 <div id="quiz-container">
   <div id="student-info">
@@ -140,11 +140,11 @@ button:disabled {
     <label>班级：
       <select id="studentClass">
         <option value="">请选择班级</option>
-        <option value="2M">2M</option>
-        <option value="2K">2K</option>
-        <option value="2B">2B</option>
-        <option value="2H">2H</option>
-        <option value="2J">2J</option>
+        <option value="3M">3M</option>
+        <option value="3K">3K</option>
+        <option value="3B">3B</option>
+        <option value="3H">3H</option>
+        <option value="3J">3J</option>
       </select>
     </label>
     <button id="startQuiz">开始测验</button>
@@ -168,40 +168,40 @@ button:disabled {
 <script>
 // ====== Google Apps Script URL ======
 // 请确保此链接已部署为 Web App，且权限设置为 "Anyone" (任何人)
-const scriptURL = "https://script.google.com/macros/s/AKfycbzFXEfhV1sdPTh-BLYohgfBzneumJSzg3UU7Kq2B1PUZLHCeG5vEir9Q03biqYFjEW7/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbzuA7A_loQmM8AfheooizJWB3E18ot4Yvcqc_yNUfk-YtFH4l7xGHa8RfgpjuCB9v1L-Q/exec";
 
 // ====== 题库 ======
 const rawData = `
-1,数字 605 读作什么？ A. 六百五十 B. 六百零五 C. 六百五零 D. 六十五,B
-2,选出 “八百一十二” 的数字写法。 A. 812 B. 821 C. 802 D. 820,A
-3,在数目 492 中，数字 9 的数位是什么？ A. 个位 B. 十位 C. 百位 D. 千位,B
-4,在数目 735 中，数字 7 的数值是多少？ A. 7 B. 70 C. 700 D. 7000,C
-5,哪个数目的十位是 0？ A. 310 B. 508 C. 420 D. 600,A
-6,选出比 550 大，但比 600 小的数目。 A. 549 B. 589 C. 601 D. 650,B
-7,哪个数列是顺序排列的？ A. 210, 215, 220, 225 B. 300, 290, 280, 270 C. 105, 100, 110, 115 D. 450, 440, 460, 470,A
-8,完成数列：100, 200, ( ), 400, 500。 A. 250 B. 300 C. 350 D. 600,B
-9,426 的十位近似值是多少？ A. 420 B. 430 C. 400 D. 500,A
-10,875 的百位近似值是多少？ A. 800 B. 870 C. 880 D. 900,A
-11,324 + 45 = A. 360 B. 369 C. 379 D. 469,B
-12,208 + 560 = A. 708 B. 760 C. 768 D. 868,C
-13,哪项算式的答案最大？ A. 100 + 200 B. 150 + 100 C. 300 + 50 D. 200 + 250,D
-14,458 - 32 = A. 420 B. 426 C. 436 D. 480,C
-15,600 - 255 = A. 345 B. 355 C. 445 D. 455,A
-16,980 - 120 - 50 = A. 800 B. 810 C. 860 D. 910,B
-17,( ) - 150 = 300。括号里应填入什么数目？ A. 150 B. 250 C. 450 D. 500,C
-18,计算 125 + 75 - 50 的答案。 A. 100 B. 150 C. 200 D. 250,C
-19,6 X 4 = A. 10 B. 20 C. 24 D. 30,C
-20,哪个算式代表 “5 个 3”？ A. 5 + 3 B. 3 X 5 C. 5 - 3 D. 5 ÷3,B
-21,9 X 0 的答案是： A. 0 B. 1 C. 9 D. 90,A
-22,7 X 10 = A. 7 B. 17 C. 70 D. 700,C
-23,20 ÷ 5 A. 3 B. 4 C. 5 D. 6,B
-24,48 ÷ 8 = A. 5 B. 6 C. 7 D. 8,B
-25,任何数目除以 1，答案是： A. 0 B. 1 C. 原原本本的数目 D. 10,C
-26,妈妈买了 8 个苹果，平分给 2 个孩子，每个孩子得几个？ A. 2 B. 4 C. 6 D. 16,B
-27,停车场里有 120 辆红车和 85 辆蓝车。停车场里一共有多少辆车？ A. 195 B. 200 C. 205 D. 215,C
-28,叔叔养了 350 只鸡，卖掉了 120 只。他还剩下多少只鸡？ A. 200 B. 230 C. 470 D. 500,B
-29,一只猫有 4 条腿。5 只猫一共有多少条腿？ A. 9 B. 15 C. 20 D. 25,C
-30,老师有 40 颗糖果，每位学生分 10 颗，可以分给几位学生？ A. 3 B. 4 C. 10 D. 50,B
+1,这里的数目是 “四千零五”。请问数字写法是： A. 405 B. 4005 C. 4050 D. 4500,B
+2,在数目 3 582 中，数字 5 的数位 (Place Value) 是什么？ A. 个位 B. 十位 C. 百位 D. 千位,C
+3,哪个数目的百位近似值是 2 000？ A. 1 920 B. 1 955 C. 2 055 D. 2 100,B
+4,2 145 + 3 620 = A. 5 765 B. 5 785 C. 5 865 D. 6 765,A
+5,8 000 - 3 456 = A. 4 544 B. 4 644 C. 5 456 D. 5 544,A
+6,245 x 4 = A. 860 B. 880 C. 960 D. 980,D
+7,72 / 8 = A. 7 B. 8 C. 9 D. 10,C
+8,560 / 10 = A. 56 B. 50 C. 6 D. 5,A
+9,哪项分数的数值最小？ A. 1/2 B. 1/4 C. 1/8 D. 1/10,D
+10,3/7 + 2/7 = A. 5/14 B. 5/7 C. 6/7 D. 1/7,B
+11,7/9 - 4/9 = A. 2/9 B. 3/9 (或 1/3) C. 3/0 D. 11/9,B
+12,0.5 + 0.3 = A. 0.2 B. 0.8 C. 0.53 D. 8.0,B
+13,把 35% 写成小数。 A. 0.35 B. 3.5 C. 35.0 D. 0.035,A
+14,图中涂黑部分占全图的 45/100。请问百分比是多少？ A. 4% B. 5% C. 45% D. 55%,C
+15,RM 50.00 - RM 13.50 = A. RM 36.50 B. RM 37.50 C. RM 43.50 D. RM 47.50,A
+16,RM 125 x 3 = A. RM 325 B. RM 350 C. RM 375 D. RM 475,C
+17,3 张 RM 50 和 2 张 RM 20 共有多少钱？ A. RM 70 B. RM 170 C. RM 190 D. RM 210,C
+18,现在是 3:00 p.m.。30 分钟后的时刻是： A. 3:30 p.m. B. 4:00 p.m. C. 4:30 p.m. D. 2:30 p.m.,A
+19,1 小时等于多少分钟？ A. 10 B. 24 C. 60 D. 100,C
+20,3 分钟等于多少秒？ A. 120 秒 B. 160 秒 C. 180 秒 D. 300 秒,C
+21,一年有多少个月？ A. 10 B. 12 C. 24 D. 365,B
+22,2 m 45 cm 等于多少 cm？ A. 245 cm B. 2045 cm C. 2450 cm D. 20045 cm,A
+23,1 kg 等于多少 g？ A. 10 g B. 100 g C. 500 g D. 1 000 g,D
+24,3 kg 500 g + 2 kg 200 g = A. 5 kg 300 g B. 5 kg 700 g C. 6 kg 700 g D. 1 kg 300 g,B
+25,1 升 (L) 等于多少毫升 (ml)？ A. 10 ml B. 100 ml C. 1 000 ml D. 10 000 ml,C
+26,500 ml + 850 ml = A. 1 L 350 ml B. 1 L 500 ml C. 135 ml D. 1350 L,A
+27,正方体 (Cube) 有几个平面？ A. 4 B. 6 C. 8 D. 12,B
+28,下列哪种立体图形有曲面？ A. 正方体 B. 长方体 C. 圆柱体 D. 正棱锥体,C
+29,在象形统计图中，一个笑脸符号代表 5 个人。如果有 4 个笑脸符号，代表多少人？ A. 4 B. 9 C. 20 D. 45,C
+30,如果饼分图被分成 4 个相等的部分，每部分代表多少百分比？ A. 10% B. 25% C. 50% D. 100%,B
 `;
 
 // ====== 解析 CSV ======
@@ -348,5 +348,3 @@ document.getElementById('startQuiz').addEventListener('click',()=>{
 </script>
 </body>
 </html>
-
-
