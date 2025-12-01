@@ -1,77 +1,705 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <base target="_top">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-      body { padding: 20px; background-color: #f8f9fa; }
-      .container { max-width: 600px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-      #result-card { display: none; margin-top: 20px; }
-      .loading { display: none; text-align: center; margin-top: 10px;}
-    </style>
-  </head>
-  <body>
-    
-    <div class="container">
-      <h2 class="text-center mb-4">学生成绩查询</h2>
-      
-      <div class="mb-3">
-        <label for="studentId" class="form-label">请输入学号：</label>
-        <input type="text" class="form-control" id="studentId" placeholder="例如：1001">
-      </div>
-      
-      <button class="btn btn-primary w-100" onclick="handleSearch()">查询</button>
-      
-      <div id="loading" class="loading">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-        <p>正在查询数据...</p>
-      </div>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一年级数学加减法练习题</title>
+<style>
+/* --- 全局样式 --- */
+* {
+    box-sizing: border-box;
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Microsoft YaHei', sans-serif;
+}
+body {
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    min-height: 100vh;
+    background: url('https://cdn.wallpapersafari.com/42/73/mLCejp.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.92);
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    border: 8px solid #ffcc00;
+    position: relative;
+    overflow: hidden;
+    min-height: 600px;
+}
+h1 {
+    text-align: center;
+    color: #e74c3c;
+    margin-bottom: 30px;
+    font-size: 32px;
+    background: linear-gradient(to right, #e74c3c, #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
 
-      <div id="result-card" class="card">
-        <div class="card-header bg-success text-white">查询结果</div>
-        <div class="card-body">
-          <h5 class="card-title">姓名：<span id="resName"></span></h5>
-          <hr>
-          <p class="card-text">数学：<span id="resMath" class="fw-bold"></span></p>
-          <p class="card-text">英文：<span id="resEng" class="fw-bold"></span></p>
+/* --- 开始界面样式 --- */
+#start-screen {
+    text-align: center;
+    padding: 40px 20px;
+}
+.input-group {
+    margin-bottom: 25px;
+}
+.input-group label {
+    display: block;
+    font-size: 22px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+.input-group input, .input-group select {
+    width: 100%;
+    max-width: 400px;
+    padding: 15px;
+    font-size: 20px;
+    border: 3px solid #3498db;
+    border-radius: 15px;
+    outline: none;
+    transition: all 0.3s;
+    background-color: #f0f8ff;
+    text-align: center;
+    cursor: pointer;
+}
+.input-group input:focus, .input-group select:focus {
+    border-color: #e74c3c;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+}
+
+/* --- 题目样式 --- */
+.page {
+    display: none;
+}
+.page.active {
+    display: block;
+}
+.question {
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-left: 8px solid #3498db;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+}
+.question:nth-child(odd) { border-left-color: #e74c3c; background: linear-gradient(to right, #fff9f9, #ffffff); }
+.question:nth-child(even) { border-left-color: #2ecc71; background: linear-gradient(to right, #f9fff9, #ffffff); }
+
+.question.high-level {
+    border-left-color: #e74c3c;
+    background: linear-gradient(to right, #fff5f5, #ffffff);
+    border: 2px dashed #e74c3c;
+}
+.question.high-level::before {
+    content: "✨ 高思维题 ✨";
+    position: absolute;
+    top: 10px; right: 10px;
+    background: #e74c3c; color: white;
+    padding: 5px 10px; border-radius: 10px;
+    font-size: 12px; font-weight: bold;
+}
+
+.question-number { font-weight: bold; color: #3498db; margin-bottom: 10px; font-size: 18px; }
+.question-text { margin-bottom: 15px; font-size: 20px; line-height: 1.5; }
+
+/* --- 选项按钮样式 --- */
+.options { display: flex; flex-wrap: wrap; gap: 12px; }
+.option {
+    flex: 1 0 calc(33.333% - 12px);
+    min-width: 100px;
+    padding: 12px 15px;
+    background: linear-gradient(to bottom, #e8f4fc, #d1ebff);
+    border: 3px solid #3498db;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    box-shadow: 0 4px 0 #2980b9;
+}
+.option:hover { transform: translateY(-3px); box-shadow: 0 6px 0 #2980b9; }
+.option:active { transform: translateY(2px); box-shadow: 0 2px 0 #2980b9; }
+
+.option.correct {
+    background: linear-gradient(to bottom, #d4edda, #c3e6cb);
+    border-color: #28a745; color: #155724; box-shadow: 0 4px 0 #1e7e34;
+}
+.option.incorrect {
+    background: linear-gradient(to bottom, #f8d7da, #f5c6cb);
+    border-color: #dc3545; color: #721c24; box-shadow: 0 4px 0 #c82333;
+}
+
+.feedback { margin-top: 15px; font-weight: bold; min-height: 28px; font-size: 18px; }
+.feedback.correct { color: #28a745; }
+.feedback.incorrect { color: #dc3545; }
+
+/* --- 底部控制栏 --- */
+.pagination { display: flex; justify-content: space-between; margin-top: 40px; }
+button.nav-btn {
+    padding: 12px 25px;
+    background: linear-gradient(to bottom, #3498db, #2980b9);
+    color: white; border: none; border-radius: 50px;
+    cursor: pointer; font-size: 20px; transition: all 0.3s;
+    box-shadow: 0 4px 0 #1f618d; font-weight: bold; min-width: 120px;
+}
+button.nav-btn:hover { background: linear-gradient(to bottom, #2980b9, #2471a3); transform: translateY(-3px); }
+button.nav-btn:disabled { background: linear-gradient(to bottom, #bdc3c7, #95a5a6); box-shadow: 0 4px 0 #7f8c8d; cursor: not-allowed; }
+
+/* 开始按钮 */
+#start-btn {
+    background: linear-gradient(to bottom, #2ecc71, #27ae60);
+    box-shadow: 0 4px 0 #219150; width: 200px; margin-top: 20px;
+    padding: 15px; color: white; border: none; border-radius: 50px;
+    font-size: 22px; font-weight: bold; cursor: pointer;
+}
+#start-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 0 #219150; }
+
+.progress {
+    text-align: center; margin: 20px 0; font-size: 20px; color: #2c3e50;
+    background: rgba(255, 255, 255, 0.7); padding: 10px;
+    border-radius: 50px; font-weight: bold; border: 2px dashed #3498db;
+}
+
+/* --- 总结页面 --- */
+.summary {
+    text-align: center; margin-top: 30px; padding: 30px;
+    background: linear-gradient(135deg, #e8f4fc, #d1ebff);
+    border-radius: 20px; display: none;
+    border: 5px solid #ffcc00; box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+.score {
+    font-size: 36px; font-weight: bold; color: #e74c3c;
+    background: white; padding: 10px 30px; border-radius: 50px;
+    display: inline-block; margin: 10px 0; border: 3px solid #3498db;
+}
+#upload-status { margin-top: 20px; font-size: 18px; min-height: 30px;}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>一年级数学加减法练习题</h1>
+
+    <div id="start-screen">
+        <div class="input-group">
+            <label for="student-name">姓名：</label>
+            <input type="text" id="student-name" placeholder="请输入你的名字" autocomplete="off">
         </div>
-      </div>
-      
+        <div class="input-group">
+            <label for="student-class">班级：</label>
+            <select id="student-class">
+                <option value="">请选择班级</option>
+                <option value="4M">4M</option>
+                <option value="4K">4K</option>
+                <option value="4B">4B</option>
+                <option value="4H">4H</option>
+                <option value="4J">4J</option>
+                <option value="4U">4U</option>
+                <option value="4P">4P</option>
+                <option value="4C">4C</option>
+            </select>
+        </div>
+        <button id="start-btn">开始测验</button>
     </div>
 
-    <script>
-      function handleSearch() {
-        var id = document.getElementById('studentId').value;
-        if(!id) {
-          alert("请输入学号！");
-          return;
+    <div id="quiz-area" style="display: none;">
+        <div class="progress">第 <span id="current-page">1</span> 页 / 共 6 页</div>
+
+        <div class="page active" id="page1">
+            <div class="question">
+                <div class="question-number">问题 1</div>
+                <div class="question-text">小明有5个苹果，妈妈又给了他3个。小明现在有多少个苹果？</div>
+                <div class="options">
+                    <div class="option" data-correct="false">7</div>
+                    <div class="option" data-correct="true">8</div>
+                    <div class="option" data-correct="false">9</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 2</div>
+                <div class="question-text">10 - 4 = ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">5</div>
+                    <div class="option" data-correct="true">6</div>
+                    <div class="option" data-correct="false">7</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 3</div>
+                <div class="question-text">用符号表示：7加3等于10</div>
+                <div class="options">
+                    <div class="option" data-correct="false">7 - 3 = 10</div>
+                    <div class="option" data-correct="true">7 + 3 = 10</div>
+                    <div class="option" data-correct="false">7 = 3 + 10</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 4</div>
+                <div class="question-text">两个两个地数：2, 4, 6, 8, ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">9</div>
+                    <div class="option" data-correct="true">10</div>
+                    <div class="option" data-correct="false">11</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 5</div>
+                <div class="question-text">15 - 8 = ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">6</div>
+                    <div class="option" data-correct="false">8</div>
+                    <div class="option" data-correct="true">7</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+        </div>
+        
+        <div class="page" id="page2">
+            <div class="question">
+                <div class="question-number">问题 6</div>
+                <div class="question-text">五个五个地数：5, 10, 15, 20, ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">22</div>
+                    <div class="option" data-correct="false">24</div>
+                    <div class="option" data-correct="true">25</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 7</div>
+                <div class="question-text">用符号表示：12减去5等于7</div>
+                <div class="options">
+                    <div class="option" data-correct="true">12 - 5 = 7</div>
+                    <div class="option" data-correct="false">12 + 5 = 7</div>
+                    <div class="option" data-correct="false">12 - 7 = 5</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 8</div>
+                <div class="question-text">25 + 13 = ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">35</div>
+                    <div class="option" data-correct="false">37</div>
+                    <div class="option" data-correct="true">38</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 9</div>
+                <div class="question-text">十个十个地数：10, 20, 30, 40, ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">45</div>
+                    <div class="option" data-correct="true">50</div>
+                    <div class="option" data-correct="false">55</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 10</div>
+                <div class="question-text">47 - 25 = ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">20</div>
+                    <div class="option" data-correct="false">23</div>
+                    <div class="option" data-correct="true">22</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+        </div>
+
+        <div class="page" id="page3">
+            <div class="question">
+                <div class="question-number">问题 11</div>
+                <div class="question-text">四个四个地数：4, 8, 12, 16, ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">18</div>
+                    <div class="option" data-correct="true">20</div>
+                    <div class="option" data-correct="false">22</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 12</div>
+                <div class="question-text">小明有18颗糖果，他吃了5颗，还剩多少颗？</div>
+                <div class="options">
+                    <div class="option" data-correct="false">12</div>
+                    <div class="option" data-correct="true">13</div>
+                    <div class="option" data-correct="false">14</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 13</div>
+                <div class="question-text">两个两个地减：10, 8, 6, 4, ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">3</div>
+                    <div class="option" data-correct="false">1</div>
+                    <div class="option" data-correct="true">2</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 14</div>
+                <div class="question-text">36 + 24 = ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">58</div>
+                    <div class="option" data-correct="false">59</div>
+                    <div class="option" data-correct="true">60</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 15</div>
+                <div class="question-text">十个十个地减：50, 40, 30, 20, ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">15</div>
+                    <div class="option" data-correct="true">10</div>
+                    <div class="option" data-correct="false">5</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+        </div>
+
+        <div class="page" id="page4">
+            <div class="question">
+                <div class="question-number">问题 16</div>
+                <div class="question-text">五个五个地减：25, 20, 15, 10, ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">8</div>
+                    <div class="option" data-correct="false">6</div>
+                    <div class="option" data-correct="true">5</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 17</div>
+                <div class="question-text">68 - 29 = ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">37</div>
+                    <div class="option" data-correct="false">40</div>
+                    <div class="option" data-correct="true">39</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 18</div>
+                <div class="question-text">四个四个地减：20, 16, 12, 8, ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">6</div>
+                    <div class="option" data-correct="false">5</div>
+                    <div class="option" data-correct="true">4</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 19</div>
+                <div class="question-text">小华有15元钱，买了一个8元的玩具，还剩多少钱？</div>
+                <div class="options">
+                    <div class="option" data-correct="false">6</div>
+                    <div class="option" data-correct="true">7</div>
+                    <div class="option" data-correct="false">8</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 20</div>
+                <div class="question-text">57 + 28 = ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">83</div>
+                    <div class="option" data-correct="false">84</div>
+                    <div class="option" data-correct="true">85</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+        </div>
+
+        <div class="page" id="page5">
+            <div class="question">
+                <div class="question-number">问题 21</div>
+                <div class="question-text">72 - 45 = ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">26</div>
+                    <div class="option" data-correct="false">28</div>
+                    <div class="option" data-correct="true">27</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 22</div>
+                <div class="question-text">班级有24个学生，又来了6个新同学，现在有多少个学生？</div>
+                <div class="options">
+                    <div class="option" data-correct="false">28</div>
+                    <div class="option" data-correct="false">29</div>
+                    <div class="option" data-correct="true">30</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question high-level">
+                <div class="question-number">问题 23</div>
+                <div class="question-text">一个盒子里有红色和蓝色两种球，红色球比蓝色球多5个。如果总共有17个球，那么红色球有多少个？</div>
+                <div class="options">
+                    <div class="option" data-correct="false">10</div>
+                    <div class="option" data-correct="false">11</div>
+                    <div class="option" data-correct="true">12</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 24</div>
+                <div class="question-text">89 - 37 = ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">51</div>
+                    <div class="option" data-correct="false">53</div>
+                    <div class="option" data-correct="true">52</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 25</div>
+                <div class="question-text">五个五个地加：15, 20, 25, 30, ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">32</div>
+                    <div class="option" data-correct="false">34</div>
+                    <div class="option" data-correct="true">35</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+        </div>
+
+        <div class="page" id="page6">
+            <div class="question">
+                <div class="question-number">问题 26</div>
+                <div class="question-text">十个十个地加：30, 40, 50, 60, ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">65</div>
+                    <div class="option" data-correct="false">68</div>
+                    <div class="option" data-correct="true">70</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question high-level">
+                <div class="question-number">问题 27</div>
+                <div class="question-text">小明有一些贴纸，他给了小红5张贴纸后，还剩8张。小明原来有多少张贴纸？</div>
+                <div class="options">
+                    <div class="option" data-correct="false">11</div>
+                    <div class="option" data-correct="false">12</div>
+                    <div class="option" data-correct="true">13</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 28</div>
+                <div class="question-text">四个四个地加：12, 16, 20, 24, ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">26</div>
+                    <div class="option" data-correct="false">27</div>
+                    <div class="option" data-correct="true">28</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question">
+                <div class="question-number">问题 29</div>
+                <div class="question-text">96 - 58 = ?</div>
+                <div class="options">
+                    <div class="option" data-correct="false">37</div>
+                    <div class="option" data-correct="false">39</div>
+                    <div class="option" data-correct="true">38</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+            <div class="question high-level">
+                <div class="question-number">问题 30</div>
+                <div class="question-text">一本书，小明第一天读了12页，第二天读了15页，第三天读的页数比前两天总和少5页。第三天读了多少页？</div>
+                <div class="options">
+                    <div class="option" data-correct="false">20</div>
+                    <div class="option" data-correct="true">22</div>
+                    <div class="option" data-correct="false">24</div>
+                </div>
+                <div class="feedback"></div>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <button id="prev-btn" class="nav-btn" disabled>上一页</button>
+            <button id="next-btn" class="nav-btn">下一页</button>
+        </div>
+    </div>
+
+    <div class="summary" id="summary">
+        <h2 id="final-msg">练习完成！</h2>
+        <div id="student-info-display" style="font-size: 22px; color: #34495e; margin-bottom: 20px;"></div>
+        <p>你的得分是：<span class="score" id="score">0</span> / 30</p>
+        <div id="upload-status"></div>
+    </div>
+</div>
+
+<script>
+// ====== 你的 Google Apps Script URL ======
+const scriptURL = 'https://script.google.com/macros/s/AKfycbzdRs-KHtgxmVyClxB9GFiiTbRIoULFSsALGvs6YS_7aHkTMsulqI_uztp2fnSI28U9/exec';
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 元素获取
+    const startScreen = document.getElementById('start-screen');
+    const quizArea = document.getElementById('quiz-area');
+    const startBtn = document.getElementById('start-btn');
+    const nameInput = document.getElementById('student-name');
+    const classSelect = document.getElementById('student-class');
+    const studentInfoDisplay = document.getElementById('student-info-display');
+
+    const pages = document.querySelectorAll('.page');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const currentPageSpan = document.getElementById('current-page');
+    const summary = document.getElementById('summary');
+    const scoreSpan = document.getElementById('score');
+    const uploadStatus = document.getElementById('upload-status');
+    
+    let currentPage = 0;
+    let score = 0;
+    let studentName = "";
+    let studentClass = "";
+    
+    // 初始化点击事件
+    initializeQuestions();
+
+    // 1. 开始按钮逻辑
+    startBtn.addEventListener('click', function() {
+        studentName = nameInput.value.trim();
+        studentClass = classSelect.value;
+
+        if(!studentName) {
+            alert("请输入你的名字！");
+            return;
+        }
+        if(!studentClass) {
+            alert("请选择你的班级！");
+            return;
         }
 
-        // 显示加载，隐藏旧结果
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('result-card').style.display = 'none';
+        // 切换到题目界面
+        startScreen.style.display = 'none';
+        quizArea.style.display = 'block';
+        updatePageDisplay();
+    });
 
-        // 调用后端 Google Apps Script 函数
-        google.script.run
-          .withSuccessHandler(showResult)
-          .searchScore(id);
-      }
+    function updatePageDisplay() {
+        pages.forEach((page, index) => {
+            page.classList.toggle('active', index === currentPage);
+        });
+        currentPageSpan.textContent = currentPage + 1;
+        prevBtn.disabled = currentPage === 0;
+        nextBtn.textContent = currentPage === pages.length - 1 ? '完成 & 提交' : '下一页';
+    }
 
-      function showResult(response) {
-        // 隐藏加载动画
-        document.getElementById('loading').style.display = 'none';
+    // 2. 题目点击逻辑
+    function initializeQuestions() {
+        const questions = document.querySelectorAll('.question');
+        questions.forEach(question => {
+            const options = question.querySelectorAll('.option');
+            const feedback = question.querySelector('.feedback');
+            let answered = false;
+            
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    if (answered) return; 
+                    answered = true;
+                    
+                    const isCorrect = this.getAttribute('data-correct') === 'true';
+                    if (isCorrect) {
+                        this.classList.add('correct');
+                        feedback.textContent = '✅ 正确！';
+                        feedback.classList.add('correct');
+                        score++;
+                    } else {
+                        this.classList.add('incorrect');
+                        feedback.textContent = '❌ 正确答案是: ' + getCorrectAnswer(options);
+                        feedback.classList.add('incorrect');
+                        // 标出正确答案
+                        options.forEach(opt => {
+                            if (opt.getAttribute('data-correct') === 'true') {
+                                opt.classList.add('correct');
+                            }
+                        });
+                    }
+                    // 禁用该题所有选项
+                    options.forEach(opt => { opt.style.pointerEvents = 'none'; });
+                });
+            });
+        });
+    }
 
-        if (response.status === 'success') {
-          document.getElementById('resName').innerText = response.name;
-          document.getElementById('resMath').innerText = response.math;
-          document.getElementById('resEng').innerText = response.english;
-          document.getElementById('result-card').style.display = 'block';
+    function getCorrectAnswer(options) {
+        for (let option of options) {
+            if (option.getAttribute('data-correct') === 'true') return option.textContent;
+        }
+        return '';
+    }
+
+    // 3. 翻页逻辑
+    prevBtn.addEventListener('click', function() {
+        if (currentPage > 0) {
+            currentPage--;
+            updatePageDisplay();
+            window.scrollTo(0, 0); // 滚回顶部
+        }
+    });
+
+    nextBtn.addEventListener('click', function() {
+        if (currentPage < pages.length - 1) {
+            currentPage++;
+            updatePageDisplay();
+            window.scrollTo(0, 0);
         } else {
-          alert(response.message);
+            // 最后一页点击完成
+            finishQuiz();
         }
-      }
-    </script>
-  </body>
+    });
+
+    // 4. 完成测验并上传
+    function finishQuiz() {
+        quizArea.style.display = 'none';
+        summary.style.display = 'block';
+        
+        scoreSpan.textContent = score;
+        studentInfoDisplay.textContent = `${studentClass} - ${studentName}`;
+        
+        // 开始上传数据
+        uploadStatus.innerHTML = "<span style='color:blue'>正在上传成绩，请稍候...</span>";
+
+        const formData = new FormData();
+        formData.append('name', studentName);
+        formData.append('class', studentClass);
+        formData.append('score', score);
+
+        fetch(scriptURL, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            uploadStatus.innerHTML = "<b style='color:green'>✅ 成绩已成功上传！</b>";
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            uploadStatus.innerHTML = "<b style='color:red'>❌ 上传失败，请截图保存成绩。</b>";
+        });
+    }
+});
+</script>
+</body>
 </html>
