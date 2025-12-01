@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>一年级语文趣味练习 · 梦幻柔彩背景版</title>
+<title>二年级语文趣味练习</title>
 <style>
   :root{
     --card-bg: rgba(255,255,255,0.95);
@@ -12,17 +12,17 @@
     --green:#81c784;
     --red:#e57373;
     --orange:#ff7043;
-    --brown:#3e2723;
   }
   body{
     margin:0;padding:0;
     font-family:'Ma Shan Zheng','Comic Neue','Microsoft YaHei',sans-serif;
     background-size:cover;background-position:center;
-    background-image:url('https://wallpapercave.com/wp/wp6938327.jpg');
+    background-image:url('https://wallpaperset.com/w/full/5/9/b/143417.jpg');
     color:var(--text);
     min-height:100vh;
   }
   h1{text-align:center;color:#ff7043;text-shadow:2px 2px 0 #ffe0b2;margin:16px 0 6px;font-size:2rem}
+  
   .wrap{max-width:820px;margin:auto;padding:12px}
   
   /* ====== 通用卡片样式 ====== */
@@ -34,17 +34,15 @@
     box-shadow:0 10px 30px rgba(0,0,0,0.1);
     transition:transform 260ms ease;
   }
-  .card:hover{transform:translateY(-6px)}
+  .card:hover{transform:translateY(-3px)}
 
   /* ====== 1. 开始画面样式 ====== */
   #start-screen {
     max-width: 450px;
     text-align: center;
-    padding: 30px 25px;
+    padding: 30px 20px;
     margin-top: 50px;
-    border: 3px solid #ffcc80;
   }
-  
   .input-group {
     margin-bottom: 20px;
     text-align: left;
@@ -54,46 +52,42 @@
     font-size: 1.2rem;
     margin-bottom: 8px;
     font-weight: bold;
-    color: var(--brown);
+    color: #5d4037;
   }
   .input-group input, .input-group select {
     width: 100%;
     padding: 12px;
     font-size: 1.1rem;
     border: 2px solid #ffcc80;
-    border-radius: 15px;
+    border-radius: 12px;
     box-sizing: border-box;
     outline: none;
     font-family: inherit;
-    background-color: #fffde7;
-    color: var(--brown);
+    background-color: #fff8e1; /* 淡黄色背景 */
   }
   .input-group input:focus, .input-group select:focus {
-    border-color: #ff7043;
+    border-color: var(--orange);
     background-color: #fff;
   }
-
   #startBtn {
     font-size: 1.5rem;
-    padding: 12px 50px;
-    background: linear-gradient(to bottom, #ff7043, #d84315);
-    color: white;
+    padding: 12px 40px;
+    background: linear-gradient(to bottom, #ffcc80, #ffb74d);
+    color: #4e342e;
     border: none;
     border-radius: 50px;
     cursor: pointer;
-    box-shadow: 0 5px 0 #bf360c;
+    box-shadow: 0 4px 0 #f57c00;
     transition: transform 0.1s;
     margin-top: 10px;
-    font-family: inherit;
-    letter-spacing: 2px;
   }
   #startBtn:active { transform: translateY(3px); box-shadow: none; }
 
-  /* ====== 2. 练习内容区域 ====== */
+  /* ====== 2. 测验内容样式 (初始隐藏) ====== */
   #quiz-content { display: none; }
-
+  
   #student-info-bar {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255,255,255,0.9);
     padding: 10px 20px;
     border-radius: 15px;
     margin-bottom: 15px;
@@ -101,13 +95,12 @@
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
-    color: var(--brown);
-    border-left: 5px solid #ff7043;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    color: #3e2723;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   }
 
-  /* ====== 题目与选项 ====== */
-  .q{font-size:1.3rem;margin-bottom:12px; line-height: 1.5;}
+  /* ====== 题目样式 ====== */
+  .q{font-size:1.3rem;margin-bottom:12px; line-height: 1.6;}
   .choices{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
   .choice{
     min-width:120px;
@@ -117,29 +110,31 @@
     cursor:pointer;
     color:#3e2723;
     background:linear-gradient(to bottom,#fff3e0,#ffe0b2);
-    box-shadow:0 6px 0 rgba(0,0,0,0.12);
+    box-shadow:0 4px 0 rgba(0,0,0,0.1);
     transition:transform .2s, background .2s;
-    font-family: inherit;
   }
-  .choice:hover{transform:translateY(-3px)}
+  .choice:hover{transform:translateY(-2px)}
+  .choice:active{transform:translateY(2px); box-shadow:none;}
   
-  .choice.correct{background:linear-gradient(to bottom,#a5d6a7,#66bb6a);color:#1b5e20; box-shadow: none; cursor: default;}
-  .choice.wrong{background:linear-gradient(to bottom,#ef9a9a,#e57373);color:#b71c1c; box-shadow: none; cursor: default;}
+  .choice.correct{background:linear-gradient(to bottom,#a5d6a7,#66bb6a);color:#003300; box-shadow:none; cursor:default;}
+  .choice.wrong{background:linear-gradient(to bottom,#ef9a9a,#e57373);color:#660000; box-shadow:none; cursor:default;}
+  
+  /* 禁用状态 */
   .choice:disabled { cursor: default; }
 
-  /* ====== 底部结果栏 ====== */
+  /* 底部统计条 */
   .result-bar {
     position: sticky;
     bottom: 20px;
     background: rgba(255, 255, 255, 0.95);
-    padding: 12px 20px;
+    padding: 15px;
     border-radius: 50px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     text-align: center;
     font-weight:bold;
-    font-size:1.2rem;
+    font-size:1.3rem;
     color: #d84315;
-    border: 2px solid #ffcc80;
+    border: 2px solid #ffab91;
     max-width: 400px;
     margin: 20px auto;
     z-index: 100;
@@ -150,28 +145,25 @@
 </style>
 </head>
 <body>
-  <h1>🌈 一年级语文趣味练习</h1>
+  <h1>🌈 二年级语文趣味练习</h1>
   
   <div class="wrap">
     
     <div id="start-screen" class="card">
-        <h2 style="color:#d84315; margin-top:0;">✨ 欢迎小朋友 ✨</h2>
+        <h2 style="color:var(--orange); margin-top:0;">欢迎小朋友！👋</h2>
         <div class="input-group">
-            <label for="student-name">你的名字 (Nama)：</label>
-            <input type="text" id="student-name" placeholder="请输入名字..." autocomplete="off">
+            <label for="student-name">姓名 (Nama)：</label>
+            <input type="text" id="student-name" placeholder="请输入你的名字..." autocomplete="off">
         </div>
         <div class="input-group">
-            <label for="student-class">你的班级 (Kelas)：</label>
+            <label for="student-class">班级 (Kelas)：</label>
             <select id="student-class">
                 <option value="">请选择班级</option>
-                <option value="1M">1M</option>
-                <option value="1K">1K</option>
-                <option value="1B">1B</option>
-                <option value="1H">1H</option>
-                <option value="1J">1J</option>
-                <option value="1U">1U</option>
-                <option value="1P">1P</option>
-                <option value="1C">1C</option>
+                <option value="2M">2M</option>
+                <option value="2K">2K</option>
+                <option value="2B">2B</option>
+                <option value="2H">2H</option>
+                <option value="2J">2J</option>
             </select>
         </div>
         <button id="startBtn">开始练习</button>
@@ -189,32 +181,31 @@
   </div>
 
 <script>
-// ====== 你的新 Google Apps Script 链接 ======
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylneTp2mlQwFFw8PkJPxXDwkT5s1szYTK52AKG6s1eK5M92ajsw-SRnCEAzSSIOnf6qw/exec";
+// ====== 你的新 Google Apps Script 网址 ======
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAhc5FYUFqbeJhZY0U1PnMsrZMbNv8VgtyE7HB-MNxQfV-GRW0VsX3GLM55hxPS3GGZQ/exec";
 
+// ====== 题目数据 ======
 const questions = [
-  {q:'那个关于友谊的故事蕴含着深刻的______。',o:['刚巧','道理','宝贝'],a:1},
-  {q:'太阳从东方慢慢地______来了。',o:['踢球','抱着','升起'],a:2},
-  {q:'妈妈紧紧地______着怀里的孩子。',o:['奶奶','抱着','休息'],a:1},
-  {q:'弟弟在公园里高兴地______。',o:['踢球','茶杯','升起'],a:0},
-  {q:'老师给我们讲了许多做人的______。',o:['因为','道理','宝贝'],a:1},
-  {q:'他今天______路过我的家，所以我们一起吃了饭。',o:['刚巧','升起','休息'],a:0},
-  {q:'这个小狗是我最心爱的______。',o:['茶杯','宝贝','踢球'],a:1},
-  {q:'______下雨了，所以我们取消了野餐计划。',o:['刚巧','因为','奶奶'],a:1},
-  {q:'跑了这么久，我们应该停下来______一下了。',o:['休息','道理','抱着'],a:0},
-  {q:'请你帮我把桌上的______递给我。',o:['宝贝','升起','茶杯'],a:2},
-
-  /* 以下为新增题目 */
-  {q:'小明看到天空出现了一道美丽的______。',o:['彩虹','茶杯','休息'],a:0},
-  {q:'小红把找到的小猫当作自己的______一样照顾。',o:['刚巧','宝贝','道理'],a:1},
-  {q:'早上，公鸡一叫，爸爸就从床上______来了。',o:['奶奶','升起','坐起'],a:2},
-  {q:'妹妹在院子里开心地______着泡泡。',o:['休息','追','抱着'],a:1},
-  {q:'因为天气很好，我们决定去公园里______。',o:['玩耍','宝贝','茶杯'],a:0},
-  {q:'妈妈轻轻地______我的头发。',o:['升起','抚摸','刚巧'],a:1},
-  {q:'下课后，同学们都跑到操场上去______。',o:['休息','踢球','奶奶'],a:1},
-  {q:'雨停了，天空变得十分______。',o:['明亮','踢球','道理'],a:0},
-  {q:'哥哥把作业本放进______里带去学校。',o:['书包','茶杯','休息'],a:0},
-  {q:'今天的太阳特别______，照得人暖洋洋的。',o:['明亮','刚巧','道理'],a:0}
+  {q:'弟弟把书房里的书本和文具收拾得非常______。',o:['危险','整齐','吵闹'],a:1},
+  {q:'这里的空气清新，环境优美，让人感到很______。',o:['舒服','形状','坚持'],a:0},
+  {q:'一艘巨大的______正在大海上慢慢地航行。',o:['轮船','野草','岸边'],a:0},
+  {q:'只要同学们互相______，一定能把这间课室打扫干净。',o:['离开','忘记','合作'],a:2},
+  {q:'妈妈的怀抱很______，让我感到无比安心。',o:['温暖','吵闹','旁边'],a:0},
+  {q:'出门前，千万别______要把门窗关好。',o:['学习','请求','忘记'],a:2},
+  {q:'图书馆是阅读的地方，我们不可以在里面______。',o:['栽种','吵闹','挂起'],a:1},
+  {q:'我们要向勤劳的蚂蚁______，每天努力工作。',o:['学习','采摘','形状'],a:0},
+  {q:'弟弟生病了，他______妈妈带他去看医生。',o:['坚持','请求','温暖'],a:1},
+  {q:'春节到了，家家户户都在门前______了红灯笼。',o:['挂起','离开','栽种'],a:0},
+  {q:'我坐在小明的______，我们经常一起讨论功课。',o:['由来','危险','旁边'],a:2},
+  {q:'请爱护花草树木，不要随意______公园里的花朵。',o:['采摘','学习','合作'],a:0},
+  {q:'爷爷在屋后的空地上______了几棵红毛丹树。',o:['轮船','舒服','栽种'],a:2},
+  {q:'农夫在烈日下辛苦地拔除田里的______。',o:['岸边','野草','形状'],a:1},
+  {q:'傍晚时分，许多渔船陆续停靠在______。',o:['岸边','旁边','危险'],a:0},
+  {q:'放学铃声响了，同学们收拾好书包______学校。',o:['挂起','请求','离开'],a:2},
+  {q:'天上的白云______多变，有时候像棉花糖，有时候像小狗。',o:['形状','由来','温暖'],a:0},
+  {q:'无论遇到什么困难，我们都要______到底，不可半途而废。',o:['坚持','忘记','吵闹'],a:0},
+  {q:'老师正在向同学们讲解端午节的______和传说。',o:['野草','轮船','由来'],a:2},
+  {q:'在马路上踢球是非常______的行为，一定要避免。',o:['危险','整齐','舒服'],a:0}
 ];
 
 // ====== 全局变量 ======
@@ -234,13 +225,13 @@ const displayClass = document.getElementById('display-class');
 const pageArea = document.getElementById('pageArea');
 const scoreEl = document.getElementById('score');
 
-// ====== 1. 点击开始按钮 ======
+// ====== 1. 开始按钮逻辑 ======
 startBtn.addEventListener('click', () => {
     const sName = nameInput.value.trim();
     const sClass = classInput.value;
 
     if (!sName) {
-        alert("小朋友，请先输入你的名字哦！");
+        alert("小朋友，请输入你的名字哦！");
         return;
     }
     if (!sClass) {
@@ -254,34 +245,38 @@ startBtn.addEventListener('click', () => {
     // 切换界面
     startScreen.style.display = 'none';
     quizContent.style.display = 'block';
-    
-    // 显示学生信息
+
+    // 显示信息
     displayName.textContent = `学生：${studentName}`;
     displayClass.textContent = `班级：${studentClass}`;
 
-    // 生成题目
+    // 渲染题目
     render();
 });
 
-// ====== 2. 渲染题目 ======
+// ====== 2. 渲染与答题逻辑 ======
 function render(){
   pageArea.innerHTML='';
   questions.forEach((q,i)=>{
     const card=document.createElement('div');
     card.className='card';
+    
+    // 题目文本
     const qText=document.createElement('div');
     qText.className='q';
     qText.textContent=`${i+1}. ${q.q}`;
     card.appendChild(qText);
 
+    // 选项容器
     const opts=document.createElement('div');
     opts.className='choices';
+    
     q.o.forEach((opt,idx)=>{
       const b=document.createElement('button');
       b.className='choice';
       b.textContent=opt;
       b.addEventListener('click',()=>{
-        if(answers[i]!==null) return;
+        if(answers[i]!==null) return; // 防止重复答题
         selected[i]=idx;
         checkAnswer(i,card,opts);
       });
@@ -292,7 +287,6 @@ function render(){
   });
 }
 
-// ====== 3. 检查答案 ======
 function checkAnswer(i,card,opts){
   const q=questions[i];
   const chosen=selected[i];
@@ -302,9 +296,11 @@ function checkAnswer(i,card,opts){
   btns.forEach(b=>b.disabled=true);
 
   if(chosen===q.a){
+    // 答对了
     btns[chosen].classList.add('correct');
     answers[i]=true;
   }else{
+    // 答错了
     btns[chosen].classList.add('wrong');
     const correctBtn=btns[q.a];
     correctBtn.classList.add('correct-flash');
@@ -323,45 +319,45 @@ function checkAnswer(i,card,opts){
 function updateScore(){
   const correctCount=answers.filter(v=>v===true).length;
   const answeredCount=answers.filter(v=>v!==null).length;
-  // 如果未完成，显示进度
+  // 如果还在答题中，显示进度
   if(answeredCount < questions.length) {
-     scoreEl.textContent=`🌟 正确：${correctCount} / 已答：${answeredCount} (共${questions.length}题)`;
+      scoreEl.textContent=`🌟 正确：${correctCount} / 已答：${answeredCount} (共${questions.length}题)`;
   }
 }
 
-// ====== 4. 提交数据到 Google Sheet ======
+// ====== 3. 提交数据到 Google Sheet (新增) ======
 function submitToGoogleSheet(name, className, score, total) {
-    // UI 状态更新：正在提交
-    scoreEl.style.backgroundColor = "#fffde7";
+    // 1. 更新UI显示正在提交
+    scoreEl.style.backgroundColor = "#fff3e0";
     scoreEl.innerHTML = `⏳ 正在提交成绩，请稍候...`;
 
-    // 准备数据
+    // 2. 准备数据
     const formData = new URLSearchParams();
     formData.append("name", name);
     formData.append("class", className);
     formData.append("score", score);
     formData.append("total", total);
 
-    // 发送请求
+    // 3. 发送请求
     fetch(SCRIPT_URL, {
         method: 'POST',
         body: formData
     })
     .then(response => response.text())
     .then(text => {
-        // 成功状态
+        // 成功后的处理
         scoreEl.style.backgroundColor = "#e8f5e9";
-        scoreEl.style.borderColor = "#66bb6a";
-        scoreEl.style.color = "#2e7d32";
-        scoreEl.innerHTML = `✅ 成绩提交成功！得分：${score}/${total}`;
+        scoreEl.style.borderColor = "#4caf50";
+        scoreEl.style.color = "#1b5e20";
+        scoreEl.innerHTML = `✅ 成绩已存档！得分：${score}/${total}`;
         
-        alert(`🎉 太棒了 ${name}！\n\n你完成了所有练习。\n你的分数 (${score}/${total}) 已经发送给老师了！`);
+        alert(`🎉 恭喜 ${name} (${className})！\n\n你完成了所有练习。\n总得分：${score} / ${total}\n成绩已经发给老师啦！`);
     })
     .catch(error => {
         // 错误处理
         console.error('Error:', error);
-        scoreEl.innerHTML = `⚠️ 网络有点卡，请截图给老师。`;
-        alert(`练习完成！但提交成绩时网络有点卡。\n\n请把这个画面截图发给老师：\n姓名：${name}\n分数：${score}/${total}`);
+        scoreEl.innerHTML = `⚠️ 提交遇到网络问题，请截图。`;
+        alert(`做完了，但是网络有点卡。\n\n请把这个画面截图发给老师：\n姓名：${name}\n分数：${score}/${total}`);
     });
 }
 
@@ -370,7 +366,7 @@ function checkCompletion() {
     if (answeredCount === questions.length) {
         const correctCount = answers.filter(v => v === true).length;
         
-        // 稍等一会再提交，让学生看到最后一题的反馈
+        // 延迟800毫秒，让学生看完最后一题的正确与否，再提交
         setTimeout(() => {
             submitToGoogleSheet(studentName, studentClass, correctCount, questions.length);
         }, 800);
